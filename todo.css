@@ -15,7 +15,7 @@
 
 .todo {
     margin-top:7%;
-    width : 35%;
+    width : 25%;
     background-color:lightgray;
 }
 
@@ -64,21 +64,14 @@ button {
     justify-content: center;
     margin-top:30px;
     gap :8%;
-    /* background-color: blue; */
 }
 
-
-#task-list {
-    margin-left:10px;
-    display : flex;
-    flex-direction:row;
-    align-items: center;
-    gap:5px;
-}
 
 #tasks {
     display : flex;
-    flex-direction: row;
+    flex-direction:column;
+    gap:15px;
+    margin-left : 25px;
 }
 
 
@@ -110,6 +103,27 @@ li {
     align-items:center;
     height : 50px;
     width :60px;
+    justify-items: flex-end;
+}
+
+
+.nested-div {
+    width : 85%;
+    gap : 10px;
+    display : flex;
+    align-items: center;  
+    margin-left:15px; 
+}
+
+
+p {
+    height : 50px;
+    width:250px;
+    margin-right : 10px;
+    background-color:white;
+    display : flex;
+    align-items : center;
+    justify-content:center;
 }
 
 
