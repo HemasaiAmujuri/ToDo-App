@@ -43,7 +43,9 @@ function addTask() {
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
   deleteButton.classList.add("medium-buttons");
-  deleteButton.onclick = () => container.remove();
+  deleteButton.onclick = () => { 
+    container.remove();
+  }
   container.appendChild(deleteButton);
   tasks.appendChild(container);
 }
@@ -54,13 +56,14 @@ function save() {
 }
 
 function onclear() {
-  container.innerText  = "";
   localStorage.removeItem("data");
-
+  document.getElementsByClassName("nested-div").innerHTML = "";
+  window.location.reload();
   alert("data cleared successfully");
 }
 
 function savedTasks() {
+  container.innerHTML  = "";
   const getUserTasks = localStorage.getItem("data");
   const getUserTasksArrayParse = JSON.parse(getUserTasks);
   for (i = 0; i < getUserTasksArrayParse.length; i++) {
