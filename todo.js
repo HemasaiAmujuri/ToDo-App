@@ -1,32 +1,44 @@
+let userTasksArray = [];
+container = ""
+
 function addTask() {
   const tasks = document.getElementById("tasks");
   const input = document.getElementById("userInput");
   const userTask = input.value;
+  userTasksArray.push(userTask);
   if (userTask == "") {
     alert("please enter your task");
     return;
   }
-  let container = document.createElement("div");
+  container = document.createElement("div");
   container.className = "nested-div";
-  let paragraph = document.createElement("p");
-  paragraph.className = "target-paragraph";
-  paragraph.textContent = userTask;
-  container.appendChild(paragraph);
+  let nestedContainer = document.createElement("div");
+  nestedContainer.className = "target-nestedContainer";
+  nestedContainer.contentEditable = false;
+  nestedContainer.textContent = userTask;
+  container.appendChild(nestedContainer);
   input.value = "";
-  
+
+  const savebtn = document.createElement("button");
+  savebtn.textContent = "✔";
+  savebtn.className = "medium-buttons";
+  savebtn.id = "submit";
+  container.appendChild(savebtn);
+  savebtn.onclick = () => {
+    nestedContainer.contentEditable = false;
+  };
+
   const editbtn = document.createElement("button");
   editbtn.textContent = "Edit";
-  editbtn.className="medium-buttons";
+  editbtn.className = "medium-buttons";
+  editbtn.id = "edit-button";
   editbtn.onclick = () => {
-    const tasks = paragraph.textContent;
-    console.log(tasks)
-    const input1 = document.createElement("input");
-    input1.type = "text";
-    input1.value = tasks;
-    console.log(input1);
-    container.insertBefore(input1,paragraph);
+    const todoTask = nestedContainer.textContent;
+    console.log(todoTask);
+    nestedContainer.contentEditable = true;
+    nestedContainer.focus();
   };
-  
+
   container.appendChild(editbtn);
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
@@ -37,13 +49,55 @@ function addTask() {
 }
 
 function save() {
-  const data = document.getElementById("tasks");
-  const nesteddivData = data.querySelector(".nested-div .target-paragraph");
-  const paragraph = nesteddivData.textContent;
-  localStorage.setItem("data", paragraph);
+  const userTasksArrayStringify = JSON.stringify(userTasksArray);
+  localStorage.setItem("data", userTasksArrayStringify);
 }
 
 function onclear() {
-  alert("1");
+  container.innerText  = "";
   localStorage.removeItem("data");
+
+  alert("data cleared successfully");
+}
+
+function savedTasks() {
+  const getUserTasks = localStorage.getItem("data");
+  const getUserTasksArrayParse = JSON.parse(getUserTasks);
+  for (i = 0; i < getUserTasksArrayParse.length; i++) {
+    const data = getUserTasksArrayParse[i];
+    let container = document.createElement("div");
+    container.className = "nested-div";
+    let nestedContainer = document.createElement("div");
+    nestedContainer.className = "target-nestedContainer";
+    nestedContainer.innerText = data;
+    container.appendChild(nestedContainer);
+
+    const savebtn = document.createElement("button");
+    savebtn.textContent = "✔";
+    savebtn.className = "medium-buttons";
+    savebtn.id = "submit";
+    container.appendChild(savebtn);
+    savebtn.onclick = () => {
+      nestedContainer.contentEditable = false;
+    };
+
+    const editbtn = document.createElement("button");
+    editbtn.textContent = "Edit";
+    editbtn.className = "medium-buttons";
+    editbtn.id = "edit-button";
+    editbtn.onclick = () => {
+      const todoTask = nestedContainer.textContent;
+      console.log(todoTask);
+      nestedContainer.contentEditable = true;
+      nestedContainer.focus();
+    };
+
+    container.appendChild(editbtn);
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.classList.add("medium-buttons");
+    deleteButton.onclick = () => container.remove();
+    container.appendChild(deleteButton);
+    tasks.appendChild(container);
+  }
 }
