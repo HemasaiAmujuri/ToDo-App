@@ -12,6 +12,7 @@ function addTask() {
   }
   container = document.createElement("div");
   container.className = "nested-div";
+  container.id=`container-${userTasksArray.length}`
   let nestedContainer = document.createElement("div");
   nestedContainer.className = "target-nestedContainer";
   nestedContainer.contentEditable = false;
@@ -83,8 +84,6 @@ function savedTasks() {
     editbtn.className = "medium-buttons";
     editbtn.id = "edit-button";
     editbtn.onclick = () => {
-      const todoTask = nestedContainer.textContent;
-      console.log(todoTask);
       nestedContainer.contentEditable = true;
       nestedContainer.focus();
 
