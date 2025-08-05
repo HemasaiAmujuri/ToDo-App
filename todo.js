@@ -1,18 +1,19 @@
-let userTasksArray = [];
-container = ""
+let localStorageArray = [];
+let UIArray = [];
+let savedTasksDisplayed = false;
 
 function addTask() {
   const tasks = document.getElementById("tasks");
   const input = document.getElementById("userInput");
   const userTask = input.value;
-  userTasksArray.push(userTask);
+  UIArray.push(userTask);
   if (userTask == "") {
     alert("please enter your task");
     return;
   }
-  container = document.createElement("div");
+  const container = document.createElement("div");
   container.className = "nested-div";
-  container.id=`container-${userTasksArray.length}`
+  container.id=`container-${UIArray.length}`
   let nestedContainer = document.createElement("div");
   nestedContainer.className = "target-nestedContainer";
   nestedContainer.contentEditable = false;
@@ -28,9 +29,11 @@ function addTask() {
     nestedContainer.contentEditable = true;
     nestedContainer.focus();
 
+    if (container.querySelector('.save-btn')) return;
+
   const savebtn = document.createElement("button");
   savebtn.textContent = "✔";
-  savebtn.className = "medium-buttons";
+  savebtn.className = "medium-buttons save-btn";
   savebtn.id = "submit";
   container.appendChild(savebtn);
   container.insertBefore(savebtn,editbtn);
@@ -45,6 +48,14 @@ function addTask() {
   deleteButton.textContent = "Delete";
   deleteButton.classList.add("medium-buttons");
   deleteButton.onclick = () => { 
+    let nestedDiv = container.querySelector('div');
+    const text = nestedDiv.textContent;
+    console.log(UIArray)
+    const index = UIArray.indexOf(text)
+    if( index > -1){
+      UIArray.splice(index,1)
+    }
+    console.log(UIArray);
     container.remove();
   }
   container.appendChild(deleteButton);
@@ -52,26 +63,49 @@ function addTask() {
 }
 
 function save() {
-  const userTasksArrayStringify = JSON.stringify(userTasksArray);
-  localStorage.setItem("data", userTasksArrayStringify);
+  if( UIArray.length  ==0 ){
+      alert("No tasks to save");
+      return;
+  }
+  let localStorageArray = [...UIArray]
+  const localStorageArrayStringfy = JSON.stringify(localStorageArray);
+  localStorage.setItem("Saved-tasks", localStorageArrayStringfy);
+  alert("Data Saved Successfully")
 }
 
 function onclear() {
-  localStorage.removeItem("data");
+  localStorage.removeItem("Saved-tasks");
   document.getElementsByClassName("nested-div").innerHTML = "";
   window.location.reload();
-  alert("data cleared successfully");
+  alert("Data cleared successfully");
 }
 
 function savedTasks() {
-  container.innerHTML  = "";
-  const getUserTasks = localStorage.getItem("data");
-  if(getUserTasks == null ){
-     return 
+  const SavedTasksString = localStorage.getItem("Saved-tasks");
+  console.log(SavedTasksString);
+
+  const SavedTasks = JSON.parse(SavedTasksString);
+  if(SavedTasks == null ){
+     alert("No Saved tasks");
+     return;
   }
-  const getUserTasksArrayParse = JSON.parse(getUserTasks);
-  for (i = 0; i < getUserTasksArrayParse.length; i++) {
-    const data = getUserTasksArrayParse[i];
+
+  if(savedTasksDisplayed){
+    alert("All previous Saved Tasks displayed");
+    return;
+  }
+  const elementsNotInUI = SavedTasks.filter(item => !UIArray.includes(item));
+
+    if(elementsNotInUI == 0){
+      alert("All saved tasks already displayed")
+    }
+  
+  if(elementsNotInUI.length > 0){
+  for (i = 0; i < elementsNotInUI.length; i++) {
+    if( i === elementsNotInUI.length-1 ){
+       savedTasksDisplayed = true;
+    }
+    const data = elementsNotInUI[i];
     let container = document.createElement("div");
     container.className = "nested-div";
     let nestedContainer = document.createElement("div");
@@ -104,8 +138,15 @@ function savedTasks() {
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
     deleteButton.classList.add("medium-buttons");
-    deleteButton.onclick = () => container.remove();
+    deleteButton.onclick = () => {
+      let nestedDiv = document.querySelector('div')
+      let text = nestedDiv.textContent;
+
+      console.log(text);
+      container.remove();
+    }
     container.appendChild(deleteButton);
     tasks.appendChild(container);
   }
+}
 }
