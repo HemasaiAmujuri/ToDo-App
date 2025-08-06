@@ -61,10 +61,11 @@ function addTask() {
 }
 
 function save() {
-  if( UIArray.length  ==0 ){
+  if( UIArray.length  == 0 ){
       alert("No tasks to save");
       return;
   }
+  localStorage.clear();
   let localStorageArray = [...UIArray]
   const localStorageArrayStringfy = JSON.stringify(localStorageArray);
   localStorage.setItem("Saved-tasks", localStorageArrayStringfy);
