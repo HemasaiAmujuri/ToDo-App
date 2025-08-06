@@ -50,12 +50,10 @@ function addTask() {
   deleteButton.onclick = () => { 
     let nestedDiv = container.querySelector('div');
     const text = nestedDiv.textContent;
-    console.log(UIArray)
     const index = UIArray.indexOf(text)
     if( index > -1){
       UIArray.splice(index,1)
     }
-    console.log(UIArray);
     container.remove();
   }
   container.appendChild(deleteButton);
@@ -91,8 +89,10 @@ function savedTasks() {
   }
 
   if(savedTasksDisplayed){
+    if(SavedTasks.every(element => UIArray.includes(element))){
     alert("All previous Saved Tasks displayed");
     return;
+    }
   }
   const elementsNotInUI = SavedTasks.filter(item => !UIArray.includes(item));
 
@@ -106,6 +106,8 @@ function savedTasks() {
        savedTasksDisplayed = true;
     }
     const data = elementsNotInUI[i];
+    UIArray.push(data);
+    console.log(UIArray,"1")
     let container = document.createElement("div");
     container.className = "nested-div";
     let nestedContainer = document.createElement("div");
@@ -139,10 +141,12 @@ function savedTasks() {
     deleteButton.textContent = "Delete";
     deleteButton.classList.add("medium-buttons");
     deleteButton.onclick = () => {
-      let nestedDiv = document.querySelector('div')
+      let nestedDiv = container.querySelector('div')
       let text = nestedDiv.textContent;
-
-      console.log(text);
+      const index = UIArray.indexOf(text)
+      if( index > -1){
+        UIArray.splice(index,1)
+      }
       container.remove();
     }
     container.appendChild(deleteButton);
